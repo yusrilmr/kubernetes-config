@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: warehouse-frontend
+  labels:
+    app: warehouse-frontend
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  selector:
+    app: warehouse-frontend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: warehouse-frontend
+  name: warehouse-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: warehouse-frontend
+  template:
+    metadata:
+      labels:
+        app: warehouse-frontend
+    spec:
+      containers:
+      - name: warehouse-frontend
+        image: gcr.io/warehouse-software-322520/warehouse-frontend02:latest
+        ports:
+        - name: http
+          containerPort: 80
