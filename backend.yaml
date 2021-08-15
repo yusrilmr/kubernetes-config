@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: warehouse-backend
+  labels:
+    app: warehouse-backend
+spec:
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+  selector:
+    app: warehouse-backend
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: warehouse-backend
+  name: warehouse-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: warehouse-backend
+  template:
+    metadata:
+      labels:
+        app: warehouse-backend
+    spec:
+      containers:
+      - name: warehouse-frontend
+        image: gcr.io/warehouse-software-322520/warehouse-backend:latest
+        ports:
+        - name: http
+          containerPort: 8080
